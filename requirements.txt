@@ -1,0 +1,26 @@
+# PyTorch (CPU only)
+torch==2.2.2+cpu
+torchvision==0.17.2+cpu
+-f https://download.pytorch.org/whl/torch_stable.html
+
+# Core dependencies
+numpy<2
+scipy
+ftfy
+regex
+tqdm
+Pillow
+
+# CLIP model
+git+https://github.com/openai/CLIP.git
+
+# FAISS (CPU only)
+faiss-cpu
+
+# ONNX
+onnx
+onnxruntime
+
+# Optional UI
+gradio
+streamlit

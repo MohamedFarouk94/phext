@@ -1,0 +1,15 @@
+venv/
+
+*.npy
+*.npz
+
+images/
+
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.swp
+*.log
+*.tmp
+.DS_Store
