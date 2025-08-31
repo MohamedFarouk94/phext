@@ -1,37 +1,23 @@
 import torch
 import clip
 import numpy as np
-from PIL import Image
 
-# Load model
-device = "cpu"
-model, preprocess = clip.load("ViT-B/32", device=device)
-print("Model has been loaded successfully.")
 
-# Load embeddings
-image_embeddings = np.load("image_embeddings.npy")
-image_files = np.load("image_files.npy")
-print("Embeddings have been loaded successfully.")
+def search(query, N=5, device='cpu', image_embeddings_name='image_embeddings.npy', image_files_name='image_files.npy'):
+    model, preprocess = clip.load("ViT-B/32", device=device)
+    image_embeddings = np.load(image_embeddings_name)
+    image_files = np.load(image_files_name)
 
-# Encode query
-text = input("Enter a text description: ")
-text_tokens = clip.tokenize([text]).to(device)
-print("Query has been encoded successfully.")
+    text_tokens = clip.tokenize([query]).to(device)
 
-print("Embedding text query...")
-with torch.no_grad():
-    text_embedding = model.encode_text(text_tokens)
-text_embedding /= text_embedding.norm(dim=-1, keepdim=True)
+    with torch.no_grad():
+        text_embedding = model.encode_text(text_tokens)
 
-print("Searching...")
-similarities = (image_embeddings @ text_embedding.cpu().numpy().T).squeeze()
-top_idx = similarities.argsort()[::-1][:5]  # top 5 results
-print("Search is complete")
+    text_embedding /= text_embedding.norm(dim=-1, keepdim=True)
 
-print("Top matches:")
-for i in top_idx:
-    print(image_files[i], similarities[i])
+    similarities = (image_embeddings @ text_embedding.cpu().numpy().T).squeeze()
 
-print("Opening the best image.")
-img = Image.open(f'images/{image_files[top_idx[0]]}')
-img.show()
+    top_idx = similarities.argsort()[::-1][:N]
+
+    best_fit = image_files[top_idx[0]]
+    return best_fit, {image_files[i]: similarities[i] for i in top_idx}
