@@ -10,7 +10,7 @@ from phext import PhextSearcher
 class PhextApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("Search Your Gallery with Text")
+        self.root.title("Phext - Search Your Gallery with Text")
         self.root.geometry("900x900")
         self.root.configure(bg="white")
 
